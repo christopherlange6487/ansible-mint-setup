@@ -11,36 +11,43 @@
     - block:
       - include_role: name=baztian.apt_upgrade
       tags: apt_upgrade
-    - block:
-      - include_role: name=baztian.xfce
-      tags: xfce
+# ich nutze cinnamon,      
+#    - block:
+#      - include_role: name=baztian.xfce
+#      tags: xfce
     - block:
       - include_role: name=baztian.git
       tags: git
     - block:
       - include_role: name=baztian.python
       tags: python
+# hier muss ein interpreter gesetzt werden und python3-apt installiert werden
+# sonst bricht ab wg fehlende abhaengigkeit
     - block:
       - include_role: name=baztian.asdf
       tags: asdf
-    - block:
-      - include_role: name=baztian.emacs
-      tags: emacs
-    - block:
-      - include_role: name=baztian.keepass
-      tags: keepass
-    - block:
-      - include_role: name=baztian.gocryptfs
-      tags: gocryptfs
+# was soll das? warum nicht einfach den verfuegbaren emacs einfach installieren und gut?
+#    - block:
+#      - include_role: name=baztian.emacs
+#      tags: emacs
+# nein, ich möchte KeePassXC nehmen wg OTP
+#    - block:
+#      - include_role: name=baztian.keepass
+#      tags: keepass
+# gocryptfs auch sehr kompliziert, das gibt es doch auch normal zu laden
+#    - block:
+#      - include_role: name=baztian.gocryptfs
+#      tags: gocryptfs
     - block:
       - include_role: name=docker
       tags: docker
     - block:
       - include_role: name=baztian.java
       tags: java
-    - block:
-      - include_role: name=baztian.jython
-      tags: jython
+# brauche ich nicht
+#    - block:
+#      - include_role: name=baztian.jython
+#      tags: jython
     - block:
       - include_role: name=baztian.vscode
       tags: vscode
@@ -59,24 +66,24 @@
     - block:
       - include_role: name=baztian.other_installs
       tags: other_installs
-    - block:
-      - include_role: name=baztian.multimedia
-      tags: multimedia
-    - block:
-      - include_role: name=baztian.squeezeplay
-      tags: squeezeplay
-    - block:
-      - include_role: name=baztian.skype
-      tags: skype
-    - block:
-      - include_role: name=baztian.calibre
-      tags: calibre
+#    - block:
+#      - include_role: name=baztian.multimedia
+#      tags: multimedia
+#    - block:
+#      - include_role: name=baztian.squeezeplay
+#      tags: squeezeplay
+#    - block:
+#      - include_role: name=baztian.skype
+#      tags: skype
+#    - block:
+#      - include_role: name=baztian.calibre
+#      tags: calibre
     - block:
       - include_role: name=vagrant
       tags: vagrant
-    - block:
-      - include_role: name=eac
-      tags: eac
+#    - block:
+#      - include_role: name=eac
+#      tags: eac
     - block:
       - include_role: name=baztian.joplin
       tags: joplin
