@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Squeezeplay
+Comment=Audio Player for Logitech Media Server
+Exec=/usr/local/bin/squeezeplay
+Icon=/opt/squeezeplay/share/jive/jive/app.png
+StartupWMClass=Squeezeplay
+Type=Application
+Categories=Audio;

@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Include this role
+      debug:
+        msg: "TODO: This has to be tested with xvfb or something"
+#      include_role:
+#        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"

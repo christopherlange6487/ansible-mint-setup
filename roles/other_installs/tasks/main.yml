@@ -1,0 +1,73 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+- name: Add contrib so that ttf-mscorefonts-installer is available
+  apt_repository:
+    repo: deb http://deb.debian.org/debian {{ ansible_distribution_release }} contrib non-free
+  when: ansible_distribution == "Debian"
+- name: Install various packages
+  apt:
+    pkg: "{{ various_apt_packages }}"
+- name: Install remmina
+  block:
+  - name: Add stretch-backports so that remmina is available
+    apt_repository:
+      repo: deb http://deb.debian.org/debian stretch-backports main
+    when: ansible_distribution == "Debian" and ansible_distribution_major_version == "9"
+    register: stretch_backports
+  - name: Install remmina via package manager
+    apt:
+      pkg:
+        - remmina
+        - remmina-plugin-rdp
+        - remmina-plugin-vnc
+      default_release: "{{ 'stretch-backports' if not stretch_backports.skipped is defined else None }}"
+    tags: ansible_lint
+- name: Install xz-utils as a prerequisit to install zoom
+  apt:
+    pkg: xz-utils
+  tags: zoom_us
+- name: Install zoom.us
+  # https://support.zoom.us/hc/en-us/articles/205759689-New-Updates-for-Linux
+  apt:
+    deb: "{{ zoom_deb_url }}"
+  tags: zoom_us
+- name: Install dirmngr in order to be able to install the apt signing key
+  apt:
+    pkg:
+      - dirmngr
+      - apt-transport-https
+- name: Add Microsoft apt signing key on remote server to keyring
+  apt_key:
+    id: BC528686B50D79E339D3721CEB3E94ADBE1229CF
+    keyserver: keyserver.ubuntu.com
+  tags: ms_teams
+- name: Add apt repo for ms teams
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main
+    # setting filename required to not collide with the one provided by the deb similar to
+    # https://github.com/microsoft/vscode/blob/master/resources/linux/debian/postinst.template
+    filename: teams
+    state: present
+  tags: ms_teams
+- name: Install Microsoft Teams client
+  apt:
+    pkg: teams
+  tags: ms_teams
+- name: Add Signal apt signing key on remote server to keyring
+  apt_key:
+    id: DBA36B5181D0C816F630E889D980A17457F6FB06
+    keyserver: keyserver.ubuntu.com
+  tags: signal
+- name: Add apt repo for Signal
+  apt_repository:
+    repo: deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+    # setting filename required to not collide with the one provided by the deb similar to
+    # https://github.com/microsoft/vscode/blob/master/resources/linux/debian/postinst.template
+    filename: signal-xenial
+    state: present
+  tags: signal
+- name: Install Signal client
+  apt:
+    pkg: signal-desktop
+  tags: signal

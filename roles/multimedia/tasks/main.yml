@@ -1,0 +1,43 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+- name: Install various packages
+  apt:
+    pkg: "{{ various_apt_packages }}"
+- name: Install dirmngr in order to be able to install the apt signing key
+  apt:
+    pkg:
+      - dirmngr
+- name: Install youtube-dl
+  include_role:
+    name: baztian.pip_venv
+    apply:
+      tags:
+        - youtube_dl
+  vars:
+      pkg: youtube-dl
+      version: "{{ youtube_dl_version }}"
+  tags: youtube_dl
+- name: Add Spotify signing key on remote server to keyring
+  apt_key:
+    # Id found via
+    # https://keyserver.ubuntu.com/pks/lookup?search=Spotify+Public+Repository+Signing+Key&fingerprint=on&op=index
+    id: 8fd3d9a8d3800305a9fff259d1742ad60d811d58
+    keyserver: keyserver.ubuntu.com
+  tags: spotify
+- name: Add apt repo for Spotify
+  apt_repository:
+    repo: "deb http://repository.spotify.com stable non-free"
+    state: present
+  tags: spotify
+- name: Install Spotify package
+  apt:
+    pkg: spotify-client
+  tags: spotify
+- name: Add protracker clone if available
+  apt:
+    pkg: pt2-clone
+  when: ansible_distribution == "Debian" and
+          ansible_distribution_major_version is version('11', '>=') or
+        ansible_distribution == "Ubuntu" and
+          ansible_distribution_major_version is version('20.04', '>=')

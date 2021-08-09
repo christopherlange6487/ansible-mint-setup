@@ -1,0 +1,20 @@
+---
+#- name: Check if "official-package-repositories" list file exists
+#  stat:
+#    path: /etc/apt/sources.list.d/official-package-repositories.list
+#  register: repos_list
+#- name: Setup mirrors
+#  replace:
+#    path: /etc/apt/sources.list.d/official-package-repositories.list
+#    regexp: "{{ item.regexp }}"
+#    replace: "{{ item.replace }}"
+#  with_items: "{{ official_apt_sources_replacements }}"
+#  when: repos_list.stat.exists
+- name: Update repos and upgrade all packages
+  apt:
+    update_cache: yes
+    upgrade: safe
+- name: Remove useless apt packages and dependencies
+  apt:
+    autoremove: yes
+    autoclean: yes
