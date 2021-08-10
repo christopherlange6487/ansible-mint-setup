@@ -1,6 +1,252 @@
 ---
 - name: Install xosview
+  become: yes
   apt:
     pkg:
+      - emacs
+      - ssh
       - xosview
-      
+      - pinentry-curses
+      - pinentry-gnome3
+      - pinentry-tty
+      - inetutils-traceroute
+      - build-essential
+      - gpg
+      - screen
+      - remmina
+      - cifs-utils
+      - keyutils
+
+- name: .emacs
+  become: no
+  template:
+    src: emacs.j2
+    dest: ~/.emacs
+    mode: u+rwx,og-w
+    
+- name: .gnu-emacs-custom
+  become: no
+  template:
+    src: gnu-emacs-custom.j2
+    dest: ~/.gnu-emacs-custom
+    mode: u+rwx,og-w
+
+- name: .gnupg
+  become: no
+  file:
+    state: directory
+    path: '{{ gnupg_dir }}'
+    mode: u+=rwx,og-rwx
+
+- name: gpg.conf
+  become: no
+  template:
+    src: gpg.conf.j2
+    dest: '{{ gnupg_dir }}/gpg.conf'
+    mode: u+rw,og-rwx
+
+- name: gpg-agent.conf
+  become: no
+  template:
+    src: gpg-agent.conf.j2
+    dest: '{{ gnupg_dir }}/gpg-agent.conf'
+    mode: u+rwx,og-rwx
+
+- name: ansible-setup_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ ansible_setup_dir }}'
+    mode: u+rwx,og-w
+
+- name: jelly_git_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ jelly_git_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_dev_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_dev_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_git_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_git_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_forks_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_forks_dir }}'
+    mode: u+rwx,og-w
+
+- name: .bashrc_chrislan
+  become: no
+  template:
+    src: bashrc_chrislan.j2
+    dest: '{{ bashrc_chrislan_path}}'
+    mode: u+rw,og-w
+
+- name: .bash_aliases
+  become: no
+  template:
+    src: bash_aliases.j2
+    dest: ~/.bash_aliases
+    mode: u+rw,og-w
+
+- name: Add inclusion of bashrc_chrislan
+  become: no
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK bashrc_chrislan"
+    block: |
+      if [ -n "$BASH_VERSION" ]; then
+        if [ -f "$HOME/.bashrc_chrislan" ]; then
+          . "$HOME/.bashrc_chrislan"
+        fi
+      fi
+
+- name: tmp_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ tmp_dir }}'
+    mode: u+rwx,og-w
+
+- name: bin_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ bin_dir }}'
+    mode: u+rwx,g-rwx,o-rwx
+
+- name: backupsf.sh
+  become: no
+  template:
+    src: backupsf.sh.j2
+    dest: '{{ bin_dir }}/backupsf.sh'
+    mode: u+rwx,og-w
+
+- name: check_sfbackup_files.py
+  become: no
+  template:
+    src: check_sfbackup_files.py.j2
+    dest: '{{ bin_dir }}/check_sfbackup_files.py'
+    mode: u+rwx,og-w
+
+- name: create_linuxmint_vm.sh
+  become: no
+  template:
+    src: create_linuxmint_vm.sh.j2
+    dest: '{{ bin_dir }}/create_linuxmint_vm.sh'
+    mode: u+rwx,og-w
+
+- name: change_default_gw.sh
+  become: no
+  template:
+    src: change_default_gw.sh.j2
+    dest: '{{ bin_dir }}/change_default_gw.sh'
+    mode: u+rwx,og-rwx
+
+- name: mount_nas3.local.sh
+  become: no
+  template:
+    src: mount_nas3.local.sh.j2
+    dest: '{{ bin_dir }}/mount_nas3.local.sh'
+    mode: u+rwx,og-rwx
+
+- name: umount_nas3.local.sh
+  become: no
+  template:
+    src: umount_nas3.local.sh.j2
+    dest: '{{ bin_dir }}/umount_nas3.local.sh'
+    mode: u+rwx,og-rwx
+
+- name: mnt_net-dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net'
+    mode: u+rwx,og-w
+
+- name: mnt_net_chrislan dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chrislan
+    group: chrislan
+
+- name: mnt_net_chrislan_nas3 dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/nas3'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chrislan
+    group: chrislan
+
+- name: mnt_net_chrislan_nas3_homes dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/nas3/homes'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chrislan
+    group: chrislan
+
+- name: mnt_net_chrislan_nas3_homes_chrislan dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/nas3/homes/chrislan'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chrislan
+    group: chrislan
+
+- name: otto user dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/ottouser'
+    mode: u+rwx,og-w
+    owner: chrislan
+    group: chrislan
+
+- name: otto abt dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/ottoabt'
+    mode: u+rwx,og-w
+    owner: chrislan
+    group: chrislan
+
+- name: otto m dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/m'
+    mode: u+rwx,og-w
+    owner: chrislan
+    group: chrislan
+
+# broken
+#- name: Add Otto shares to fstab
+#  become: yes
+#  blockinfile:
+#    path: /etc/fstab
+#    marker: "# {mark} ANSIBLE MANAGED BLOCK fstab"
+#    block: |
+#      //ocnhhfs11.ocn.ottogroup.com/user$/chrislan /mnt/net/chrislan/ottouser cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
+#      //ocnhhfs21.ocn.ottogroup.com/abt$ /mnt/net/chrislan/ottoabt cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
+#      //ocnhhfs41.ocn.ottogroup.com/zdata$ /mnt/net/chrislan/m cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials 0 0
+

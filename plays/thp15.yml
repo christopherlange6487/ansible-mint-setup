@@ -48,4 +48,4 @@
       tags: joplin
     - block:
       - include_role: name=personal_tools
-      tags: test
+      tags: personal_tools

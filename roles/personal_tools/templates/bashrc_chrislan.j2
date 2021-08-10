@@ -1,0 +1,25 @@
+# chrislan's extensions
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# AWS settings
+export AWS_ASSUME_ROLE_TTL=1h
+export AWS_DEFAULT_PROFILE=saml
+export AWS_PROFILE=saml
+export SAML2AWS_REGION=eu-central-1
+export AWS_REGION=eu-central-1
+
+# make gpg work on a terminal
+export GPG_TTY="$(tty)"
+
+# date ausgeben
+echo ".bashrc_chrislan ended:" `date`

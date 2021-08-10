@@ -1,0 +1,10 @@
+---
+gnupg_dir: '${HOME}/.gnupg'
+ansible_setup_dir: '${HOME}/local/work/otto/setup/christopherlange6487/'
+bashrc_chrislan_path: '${HOME}/.bashrc_chrislan'
+jelly_git_dir: '${HOME}/local/work/otto/jelly/git/'
+turtle_dev_dir: '${HOME}/local/work/otto/dev/git/'
+turtle_git_dir: '${HOME}/local/work/otto/turtle/git/'
+turtle_forks_dir: '${HOME}/local/work/otto/turtle/forks/christopherlange6487/'
+tmp_dir: '${HOME}/tmp/'
+bin_dir: '${HOME}/bin/'

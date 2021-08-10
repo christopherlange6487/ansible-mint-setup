@@ -1,0 +1,99 @@
+;; Auto-Fill Modus abschalten, der nervt
+
+(remove-hook 'text-mode-hook #'turn-on-auto-fill)
+
+;; wenn der booked macro nicht funktioniert
+;; im scratch buffer:
+;; (define-key global-map [f7] 'booked)
+;; Zeile markieren und M-x eval-buffer ausführen
+;; danach mit f7 booked ausführen
+;; alternativ: in die Zeile gehen und M-x booked ausführen
+
+
+;; hierarchisches Mouse Buffer Menu erzwingen
+(setq mouse-buffer-menu-mode-mult 127)
+
+;; booked Macro fuer Zeitauswertungen
+;; http://www.emacswiki.org/emacs/KeyboardMacros#keyboard_macro
+;; Name: booked: wandelt das Thema (z.B. otto/ppf) in Capitals (OTTO/PPF)
+(fset 'booked
+   [?\C-a ?\C-s ?o ?t ?t ?o ?/ ?\C-m left left left left left escape ?u right escape ?u ?\C-s ?  ?o ?t ?t ?o ?/ ?\C-m ?\C-a])
+(global-set-key (kbd "C-^") 'booked)
+;; on GNOME the Caret is a dead caret, emacs won't react C-<dead circumflex>
+;; as a workaround right control key helps a bit, but better is to just define
+;; a keybinding for dead-circumflext
+;; https://emacs.stackexchange.com/questions/2568/problem-dead-acute-is-undefined-appearing-when-typing-greek-stress
+(global-set-key (kbd "C-<dead-circumflex>") 'booked)
+
+
+;; SetTaskDone Macro fuer Clipboards
+;; findet ab Anfang der aktuellen Zeile die nächste Zeile, die mit "o " beginnt und schreibt 
+;; an die Stelles des o (fuer offener Task) eine * (erledigter Task)
+;; Shortcut: C++
+(fset 'SetTaskDone
+   [?\C-a escape ?x ?i ?s ?e ?a ?r ?c ?h ?- ?f ?o ?r ?w ?a ?r ?d ?- ?r ?e ?g ?e ?x ?e ?x backspace backspace ?p return ?^ ?o ?  ?\C-m ?\C-a ?\C-d ?* escape ?x ?i ?s ?e ?a ?r ?c ?h ?- ?f ?o ?r ?w ?a ?r ?d ?- ?r ?e ?g ?e ?x ?p return ?^ ?o ?  ?\C-m left left])
+(global-set-key (kbd "C-+") 'SetTaskDone)
+(global-set-key (kbd "<f12>") 'SetTaskDone)
+
+
+
+;; backup files into own directory
+;; http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+  kept-new-versions 25
+  kept-old-versions 3
+  version-control t)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(delete-selection-mode nil)
+ '(epa-pinentry-mode (quote loopback))
+ '(mark-even-if-inactive t)
+ '(scroll-bar-mode (quote right))
+ '(show-paren-mode t))
+;;;(custom-set-faces
+;;; ;; custom-set-faces was added by Custom.
+;;; ;; If you edit it by hand, you could mess it up, so be careful.
+;;; ;; Your init file should contain only one such instance.
+;;; ;; If there is more than one, they won't work right.
+;;; '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 97 :width normal)))))
+
+;; no tabs
+(setq-default indent-tabs-mode nil)
+
+
+;; http://www.emacswiki.org/emacs/ToggleWindowSplit
+(defun toggle-frame-split ()
+  "If the frame is split vertically, split it horizontally or vice versa.
+Assumes that the frame is only split into two."
+  (interactive)
+  (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
+  (let ((split-vertically-p (window-combined-p)))
+    (delete-window) ; closes current window
+    (if split-vertically-p
+        (split-window-horizontally)
+      (split-window-vertically)) ; gives us a split with the other window twice
+    (switch-to-buffer nil))) ; restore the original window in this part of the frame
+
+;; I don't use the default binding of 'C-x 5', so use toggle-frame-split instead
+(global-set-key (kbd "C-x 5") 'toggle-frame-split)
+
+;; split windows vertically
+;; http://www.emacswiki.org/emacs/HorizontalSplitting
+;; split windows vertically (buffer menu at the right )
+;; (setq split-width-threshold 0)
+;; split windows horizontally (buffer menu at the lower half)
+(setq split-width-threshold 9999)
+
+
+;; Markdown Mode
+;; https://www.emacswiki.org/emacs/MarkdownMode
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;             '("melpa-stable" . "https://stable.melpa.org/packages/"))
+;; (package-initialize)

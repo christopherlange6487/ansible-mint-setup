@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+ISO=/home/chrislan/Downloads/linuxmint-20.2-cinnamon-64bit.iso 
+VM="LinuxMintAnsibleTest"
+MEDIUM="$HOME/VirtualBox VMs/$VM/$VM.vdi"
+VBoxManage createvm --name $VM --ostype "Ubuntu_64" --register
+VBoxManage createhd --filename "$MEDIUM" --size 32768
+VBoxManage storagectl $VM --name "SATA Controller" --add sata --controller IntelAHCI
+VBoxManage storageattach $VM --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "$MEDIUM"
+VBoxManage storagectl $VM --name "IDE Controller" --add ide
+VBoxManage storageattach $VM --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium $ISO
+VBoxManage modifyvm $VM --ioapic on
+VBoxManage modifyvm $VM --boot1 dvd --boot2 disk --boot3 none --boot4 none
+VBoxManage modifyvm $VM --memory 4096 --vram 128
+# Port forwarding 3222 for ssh
+VBoxManage modifyvm $VM --natpf1 "guestssh,tcp,,3222,,22"
+VBoxManage startvm $VM
