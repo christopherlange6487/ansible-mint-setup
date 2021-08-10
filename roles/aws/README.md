@@ -14,8 +14,8 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.asdf
-         - role: baztian.aws
+         - role: asdf
+         - role: aws
 
 License
 -------

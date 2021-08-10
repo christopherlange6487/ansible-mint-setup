@@ -10,7 +10,7 @@ fancy setup.
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.multimedia
+         - role: multimedia
 
 ## License
 

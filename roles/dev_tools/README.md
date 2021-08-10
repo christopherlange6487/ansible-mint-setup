@@ -10,7 +10,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - role: baztian.dev_tools
+         - role: dev_tools
 
 License
 -------

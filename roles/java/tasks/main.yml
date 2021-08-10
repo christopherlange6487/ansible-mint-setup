@@ -25,7 +25,7 @@
     pkg: "{{ java_pkgs }}"
 - name: Install JDK(s) via asdf
   include_role:
-    name: baztian.asdf
+    name: asdf
   vars:
     asdf_plugins:
       - name: java

@@ -2,81 +2,81 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Download required roles
-      delegate_to: localhost
-      command: ansible-galaxy install -r {{ playbook_dir }}/requirements.yml
-      become: no
-      changed_when: False
-      tags: always
+#    - name: Download required roles
+#      delegate_to: localhost
+#      command: ansible-galaxy install -r {{ playbook_dir }}/requirements.yml
+#      become: no
+#      changed_when: False
+#      tags: always
     - block:
-      - include_role: name=baztian.apt_upgrade
+      - include_role: name=apt_upgrade
       tags: apt_upgrade
 # ich nutze cinnamon,      
 #    - block:
-#      - include_role: name=baztian.xfce
+#      - include_role: name=xfce
 #      tags: xfce
     - block:
-      - include_role: name=baztian.git
+      - include_role: name=git
       tags: git
     - block:
-      - include_role: name=baztian.python
+      - include_role: name=python
       tags: python
 # hier muss ein interpreter gesetzt werden und python3-apt installiert werden
 # sonst bricht ab wg fehlende abhaengigkeit
     - block:
-      - include_role: name=baztian.asdf
+      - include_role: name=asdf
       tags: asdf
 # was soll das? warum nicht einfach den verfuegbaren emacs einfach installieren und gut?
 #    - block:
-#      - include_role: name=baztian.emacs
+#      - include_role: name=emacs
 #      tags: emacs
 # nein, ich möchte KeePassXC nehmen wg OTP
 #    - block:
-#      - include_role: name=baztian.keepass
+#      - include_role: name=keepass
 #      tags: keepass
 # gocryptfs auch sehr kompliziert, das gibt es doch auch normal zu laden
 #    - block:
-#      - include_role: name=baztian.gocryptfs
+#      - include_role: name=gocryptfs
 #      tags: gocryptfs
     - block:
       - include_role: name=docker
       tags: docker
     - block:
-      - include_role: name=baztian.java
+      - include_role: name=java
       tags: java
 # brauche ich nicht
 #    - block:
-#      - include_role: name=baztian.jython
+#      - include_role: name=jython
 #      tags: jython
     - block:
-      - include_role: name=baztian.vscode
+      - include_role: name=vscode
       tags: vscode
     - block:
-      - include_role: name=baztian.jetbrains_toolbox
+      - include_role: name=jetbrains_toolbox
       tags: jetbrains_toolbox
     - block:
-      - include_role: name=baztian.js
+      - include_role: name=js
       tags: js
     - block:
-      - include_role: name=baztian.dev_tools
+      - include_role: name=dev_tools
       tags: dev_tools
     - block:
-      - include_role: name=baztian.aws
+      - include_role: name=aws
       tags: aws
     - block:
-      - include_role: name=baztian.other_installs
+      - include_role: name=other_installs
       tags: other_installs
 #    - block:
-#      - include_role: name=baztian.multimedia
+#      - include_role: name=multimedia
 #      tags: multimedia
 #    - block:
-#      - include_role: name=baztian.squeezeplay
+#      - include_role: name=squeezeplay
 #      tags: squeezeplay
 #    - block:
-#      - include_role: name=baztian.skype
+#      - include_role: name=skype
 #      tags: skype
 #    - block:
-#      - include_role: name=baztian.calibre
+#      - include_role: name=calibre
 #      tags: calibre
     - block:
       - include_role: name=vagrant
@@ -85,5 +85,8 @@
 #      - include_role: name=eac
 #      tags: eac
     - block:
-      - include_role: name=baztian.joplin
+      - include_role: name=joplin
       tags: joplin
+    - block:
+      - include_role: name=test
+      tags: test

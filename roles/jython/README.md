@@ -40,7 +40,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - { role: baztian.jython, jython_version: "2.7.0" }
+         - { role: jython, jython_version: "2.7.0" }
 
 License
 -------

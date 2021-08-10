@@ -11,7 +11,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.vscode
+         - role: vscode
 
 License
 -------

@@ -11,7 +11,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.jetbrains_toolbox
+         - role: jetbrains_toolbox
 
 License
 -------

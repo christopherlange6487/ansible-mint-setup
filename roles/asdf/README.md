@@ -17,7 +17,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.asdf
+         - role: asdf
            vars:
             asdf_plugins:
               - name: terraform

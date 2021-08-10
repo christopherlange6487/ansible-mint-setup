@@ -10,7 +10,7 @@
       - dirmngr
 - name: Install youtube-dl
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
     apply:
       tags:
         - youtube_dl

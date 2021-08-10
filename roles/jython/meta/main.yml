@@ -14,5 +14,5 @@ galaxy_info:
     - install
     - virtualenv
 dependencies:
-  - baztian.python
-  - baztian.java
+  - python
+  - java

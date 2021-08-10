@@ -9,7 +9,7 @@ Execute directly from the command line
 --------------------------------------
 
     ansible-galaxy install baztian.keepass
-    ansible localhost -m include_role -a 'name=baztian.keepass' -K -b
+    ansible localhost -m include_role -a 'name=keepass' -K -b
 
 Example Playbook
 ----------------
@@ -17,7 +17,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.keepass
+         - role: keepass
 
 License
 -------

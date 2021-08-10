@@ -40,7 +40,7 @@
   rescue:
     - name: Install pipenv without package manager
       include_role:
-        name: baztian.pip_venv
+        name: pip_venv
       vars:
           pkg: pipenv
           version: 2018.11.26
@@ -51,7 +51,7 @@
   package_facts:
 - name: Install tox via pip_venv
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
   vars:
       pkg: tox
       version: "{{ tox_version }}"

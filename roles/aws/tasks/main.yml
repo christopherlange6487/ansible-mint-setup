@@ -158,7 +158,7 @@
   tags: saml2aws
 - name: Install terraform via asdf
   include_role:
-    name: baztian.asdf
+    name: asdf
   vars:
     asdf_plugins:
       - name: terraform
@@ -185,7 +185,7 @@
   tags: aws_sam_cli
 - name: Install aws-sam-cli
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
   vars:
       pkg: aws-sam-cli
       version: "{{ aws_sam_cli_version }}"

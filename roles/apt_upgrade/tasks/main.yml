@@ -10,6 +10,16 @@
 #    replace: "{{ item.replace }}"
 #  with_items: "{{ official_apt_sources_replacements }}"
 #  when: repos_list.stat.exists
+- name: Extract distribution base name (works on linux mint as well)
+  command: grep -oP '{{ "VERSION" if ansible_distribution == "Debian" else "UBUNTU" }}_CODENAME=\K.*' /etc/os-release
+  register: distro
+  changed_when: False
+#- name: Print distro name
+#  ansible.builtin.debug:
+#    msg: System {{ inventory_hostname }} use distro {{ distro }}
+#- name: Print distro name
+#  ansible.builtin.debug:
+#    var: distro.stdout
 - name: Update repos and upgrade all packages
   apt:
     update_cache: yes

@@ -9,7 +9,7 @@ Role to install [squeezeplay](https://sourceforge.net/projects/lmsclients/files/
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.squeezeplay
+         - role: squeezeplay
 
 ## License
 

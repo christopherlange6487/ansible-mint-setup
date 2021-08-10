@@ -13,7 +13,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.pip_venv
+         - role: pip_venv
            vars:
              pkg: bump2version
              version: 1.0.1
