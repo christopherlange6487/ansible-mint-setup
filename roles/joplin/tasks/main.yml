@@ -20,22 +20,22 @@
     src: "Joplin-{{ joplin_version }}.AppImage"
     dest: "/opt/Joplin.AppImage"
     state: link
-#- name: Check if Joplin icon already installed
-#  stat:
-#    path: /usr/local/share/icons/hicolor/512x512/apps/joplin.png
-#  register: Joplin_icon
-#- name: Download Joplin icon
-#  get_url:
-#    url: https://joplinapp.org/images/Icon512.png
-#    dest: /usr/local/share/icons/hicolor/512x512/apps/joplin.png
-#  when: not Joplin_icon.stat.exists
-#- name: Create launcher directory
-#  file:
-#    path: /usr/local/share/applications
-#    state: directory
-#    mode: 0755
-#- name: Copy Joplin desktop launcher
-#  copy:
-#    src: joplin.desktop
-#    dest: /usr/local/share/applications/joplin.desktop
-#    mode: 0644
+- name: Check if Joplin icon already installed
+  stat:
+    path: /usr/local/share/icons/hicolor/512x512/apps/joplin.png
+  register: Joplin_icon
+- name: Download Joplin icon
+  get_url:
+    url: https://joplinapp.org/images/Icon512.png
+    dest: /usr/local/share/icons/hicolor/512x512/apps/joplin.png
+  when: not Joplin_icon.stat.exists
+- name: Create launcher directory
+  file:
+    path: /usr/local/share/applications
+    state: directory
+    mode: 0755
+- name: Copy Joplin desktop launcher
+  copy:
+    src: joplin.desktop
+    dest: /usr/local/share/applications/joplin.desktop
+    mode: 0644

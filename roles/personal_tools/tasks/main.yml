@@ -1,5 +1,5 @@
 ---
-- name: Install xosview
+- name: Install packages
   become: yes
   apt:
     pkg:
@@ -16,7 +16,23 @@
       - remmina
       - cifs-utils
       - keyutils
-
+      - python
+      - dos2unix
+      - keepassxc
+      - httpie
+      - terminator
+      - chromium-browser
+      - fzf
+      - vim
+      - ubuntu-restricted-extras
+      - gdebi
+      - sysstat
+      
+- name: Set default editor to vim
+  alternatives:
+    name: editor
+    path: /usr/bin/vim.basic
+    
 - name: .emacs
   become: no
   template:
@@ -155,6 +171,13 @@
     dest: '{{ bin_dir }}/change_default_gw.sh'
     mode: u+rwx,og-rwx
 
+- name: loadsshkey.sh
+  become: no
+  template:
+    src: loadsshkey.sh.j2
+    dest: '{{ turtle_dev_dir }}/loadsshkey.sh'
+    mode: u+rwx,og-w
+
 - name: mount_nas3.local.sh
   become: no
   template:
@@ -250,3 +273,16 @@
 #      //ocnhhfs21.ocn.ottogroup.com/abt$ /mnt/net/chrislan/ottoabt cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
 #      //ocnhhfs41.ocn.ottogroup.com/zdata$ /mnt/net/chrislan/m cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials 0 0
 
+- name: nas3 net symlink (used for time reporint scripts)
+  become: no
+  file:
+    state: link
+    src: '/mnt/net/chrislan/nas3'
+    dest: '${HOME}/net'
+    mode: u+rwx,og-w
+    owner: chrislan
+    group: chrislan
+
+- import_tasks: snap.yml
+
+- import_tasks: flatpak.yml

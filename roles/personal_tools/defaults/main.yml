@@ -1,6 +1,6 @@
 ---
 gnupg_dir: '${HOME}/.gnupg'
-ansible_setup_dir: '${HOME}/local/work/otto/setup/christopherlange6487/'
+ansible_setup_dir: '${HOME}/local/work/otto/setup/christopherlange6487/ansible-mint-setup/'
 bashrc_chrislan_path: '${HOME}/.bashrc_chrislan'
 jelly_git_dir: '${HOME}/local/work/otto/jelly/git/'
 turtle_dev_dir: '${HOME}/local/work/otto/dev/git/'
