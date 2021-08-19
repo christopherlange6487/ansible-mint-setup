@@ -17,12 +17,12 @@
     update_cache: yes
     upgrade: no
 
-- name: Install classic snaps
-  snap:
-    name: "{{ item }}"
-    classic: yes
-  loop:
-      - shutter
+#- name: Install classic snaps
+#  snap:
+#    name: "{{ item }}"
+#    classic: yes
+#  loop:
+#      - shutter
 
 - name: Install non-classic snaps
   snap:
