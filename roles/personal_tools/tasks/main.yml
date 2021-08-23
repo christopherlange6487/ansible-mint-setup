@@ -27,6 +27,7 @@
       - ubuntu-restricted-extras
       - gdebi
       - sysstat
+      - hardinfo
       
 - name: Set default editor to vim
   alternatives:
@@ -231,6 +232,15 @@
   file:
     state: directory
     path: '/mnt/net/chrislan/nas3/homes/chrislan'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chrislan
+    group: chrislan
+
+- name: mnt_net_chrislan_nas3_pub dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chrislan/nas3/pub'
     mode: u+rwx,g+rwx,o-rwx
     owner: chrislan
     group: chrislan

@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 # mount nas3 as chrislan
 mount -t cifs -o user=chrislan,vers=3.0,dir_mode=0770,file_mode=0660,uid=chrislan,gid=100,credentials=/home/chrislan/.smbcredentials_nas3 //nas3.local/homes/chrislan /mnt/net/chrislan/nas3/homes/chrislan
+mount -t cifs -o user=chrislan,vers=3.0,dir_mode=0770,file_mode=0660,uid=chrislan,gid=100,credentials=/home/chrislan/.smbcredentials_nas3 //nas3.local/pub /mnt/net/chrislan/nas3/pub
