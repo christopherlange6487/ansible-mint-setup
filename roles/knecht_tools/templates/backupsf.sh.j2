@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+# renames and copies salesforce backup to aws s3 bucket
+# first download the salesforce files from salesforce
+# you get an email each sunday
+# the files are typically named WE_00D1t000000Ef7EEAS_...zip
+
+#cd ~/Downloads/
+
+# try to login with aws creds
+# if not working try using export AWS_VAULT_BACKEND=file
+# danach mit Passwort aus dem walltet weitermachen.
+# nachteil: man muß jeden Request einzeln freischalten
+
+mydate=`date +%Y%m%d`
+
+# exit on errors
+set -e
+
+if [ "x$1" != "x" ]
+then
+    # we have a customized date
+    mydate="$1"
+fi
+
+
+saml2aws login -a adm@infra --force
+
+aws --profile saml s3 ls
+
+
+echo
+echo "using ${mydate} as date"
+echo "press ctrl-c if this is not intended. Sleeping 5 seconds"
+sleep 5
+
+
+
+if [ $? -ne 0 ]
+then
+    echo "wrong credential"
+    exit 1
+fi
+
+echo "renaming and copying files ..."
+for i in WE_00D1t000000Ef7EEAS_*.ZIP
+do
+    echo ${i}
+    i2="SF_Backup_${mydate}_${i}"
+    mv "${i}" "${i2}"
+    set +e
+    aws --profile saml s3 cp "${i2}" "s3://de.otto.prm.salesforce.backup/$i2"
+    RV=$?
+    if [ $RV -ne 0 ]
+    then
+        echo "Error: Could not copy ${i2} to s3://de.otto.prm.salesforce.backup/$i2. Receive return value $RV. Timeout?"
+        echo "Will rename file to orig filename re-transmit if restarted and abort."
+        mv "${i2}" "${i}"
+        exit 1
+    fi
+    set -e 
+done
+
+echo "Ergebnis":
+echo "Uploaed "`aws --profile saml s3 ls "s3://de.otto.prm.salesforce.backup/" | grep ${mydate} | wc -l` "Files"
+echo "Files:"
+aws --profile saml s3 ls "s3://de.otto.prm.salesforce.backup/" | grep ${mydate}

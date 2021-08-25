@@ -1,0 +1,263 @@
+---
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - emacs
+      - ssh
+      - xosview
+      - pinentry-curses
+      - pinentry-gnome3
+      - pinentry-tty
+      - inetutils-traceroute
+      - build-essential
+      - gpg
+      - screen
+      - remmina
+      - cifs-utils
+      - keyutils
+      - python
+      - dos2unix
+      - keepassxc
+      - httpie
+      - terminator
+      - chromium-browser
+      - fzf
+      - vim
+      - ubuntu-restricted-extras
+      - gdebi
+      - sysstat
+      - hardinfo
+      
+- name: Set default editor to vim
+  alternatives:
+    name: editor
+    path: /usr/bin/vim.basic
+    
+- name: .emacs
+  become: no
+  template:
+    src: emacs.j2
+    dest: ~/.emacs
+    mode: u+rwx,og-w
+    
+- name: .gnu-emacs-custom
+  become: no
+  template:
+    src: gnu-emacs-custom.j2
+    dest: ~/.gnu-emacs-custom
+    mode: u+rwx,og-w
+
+- name: .gnupg
+  become: no
+  file:
+    state: directory
+    path: '{{ gnupg_dir }}'
+    mode: u+=rwx,og-rwx
+
+- name: gpg.conf
+  become: no
+  template:
+    src: gpg.conf.j2
+    dest: '{{ gnupg_dir }}/gpg.conf'
+    mode: u+rw,og-rwx
+
+- name: gpg-agent.conf
+  become: no
+  template:
+    src: gpg-agent.conf.j2
+    dest: '{{ gnupg_dir }}/gpg-agent.conf'
+    mode: u+rwx,og-rwx
+
+- name: ansible-setup_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ ansible_setup_dir }}'
+    mode: u+rwx,og-w
+
+- name: jelly_git_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ jelly_git_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_dev_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_dev_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_git_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_git_dir }}'
+    mode: u+rwx,og-w
+
+- name: turtle_forks_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ turtle_forks_dir }}'
+    mode: u+rwx,og-w
+
+- name: .bashrc_chl
+  become: no
+  template:
+    src: bashrc_chl.j2
+    dest: '{{ bashrc_chl_path}}'
+    mode: u+rw,og-w
+
+- name: .bash_aliases
+  become: no
+  template:
+    src: bash_aliases.j2
+    dest: ~/.bash_aliases
+    mode: u+rw,og-w
+
+- name: Add inclusion of bashrc_chl
+  become: no
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK bashrc_chl"
+    block: |
+      if [ -n "$BASH_VERSION" ]; then
+        if [ -f "$HOME/.bashrc_chl" ]; then
+          . "$HOME/.bashrc_chl"
+        fi
+      fi
+
+- name: tmp_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ tmp_dir }}'
+    mode: u+rwx,og-w
+
+- name: bin_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ bin_dir }}'
+    mode: u+rwx,g-rwx,o-rwx
+
+- name: backupsf.sh
+  become: no
+  template:
+    src: backupsf.sh.j2
+    dest: '{{ bin_dir }}/backupsf.sh'
+    mode: u+rwx,og-w
+
+- name: check_sfbackup_files.py
+  become: no
+  template:
+    src: check_sfbackup_files.py.j2
+    dest: '{{ bin_dir }}/check_sfbackup_files.py'
+    mode: u+rwx,og-w
+
+- name: create_linuxmint_vm.sh
+  become: no
+  template:
+    src: create_linuxmint_vm.sh.j2
+    dest: '{{ bin_dir }}/create_linuxmint_vm.sh'
+    mode: u+rwx,og-w
+
+- name: change_default_gw.sh
+  become: no
+  template:
+    src: change_default_gw.sh.j2
+    dest: '{{ bin_dir }}/change_default_gw.sh'
+    mode: u+rwx,og-rwx
+
+- name: loadsshkey.sh
+  become: no
+  template:
+    src: loadsshkey.sh.j2
+    dest: '{{ turtle_dev_dir }}/loadsshkey.sh'
+    mode: u+rwx,og-w
+
+- name: mount_nas3.local.sh
+  become: no
+  template:
+    src: mount_nas3.local.sh.j2
+    dest: '{{ bin_dir }}/mount_nas3.local.sh'
+    mode: u+rwx,og-rwx
+
+- name: umount_nas3.local.sh
+  become: no
+  template:
+    src: umount_nas3.local.sh.j2
+    dest: '{{ bin_dir }}/umount_nas3.local.sh'
+    mode: u+rwx,og-rwx
+
+- name: mnt_net-dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net'
+    mode: u+rwx,og-w
+
+- name: mnt_net_chl dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas3 dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas3'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas3_homes dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas3/homes'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas3_homes_chl dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas3/homes/chl'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas3_pub dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas3/pub'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: nas3 net symlink (used for time reporint scripts)
+  become: no
+  file:
+    state: link
+    src: '/mnt/net/chl/nas3'
+    dest: '${HOME}/net'
+    mode: u+rwx,og-w
+    owner: chl
+    group: chl
+
+- import_tasks: snap.yml
+
+- import_tasks: flatpak.yml
+
+- import_tasks: shutter.yml
+

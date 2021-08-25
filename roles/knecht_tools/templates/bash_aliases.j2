@@ -1,0 +1,11 @@
+# aws describe instances, tricky escapes
+alias adi="aws ec2 describe-instances --filters Name=tag-key,Values=Name --query 'Reservations[*].Instances[*].{Instance:InstanceId,State:State.Name,AZ:Placement.AvailabilityZone,Name:Tags[?Key==\`Name\`]|[0].Value}' --output table"
+alias e="emacs -nw"
+alias cda="cd {{ ansible_setup_dir }}"
+alias cdj="cd {{ jelly_git_dir }}"
+alias cdd="cd {{ turtle_dev_dir }}"
+alias cdt="cd {{ turtle_git_dir }}"
+alias cdf="cd {{ turtle_forks_dir }}"
+alias hg="history | grep "
+alias hl="history | less"
+alias dlg="dpkg --list | grep "

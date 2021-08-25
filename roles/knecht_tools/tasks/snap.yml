@@ -1,0 +1,48 @@
+---
+- name: Remove snap blocker
+  become: yes
+  file:
+    state: absent
+    path: '/etc/apt/preferences.d/nosnap.pref'
+
+- name: Install snap
+  become: yes
+  apt:
+    pkg:
+      - snapd
+      - snap
+
+- name: Update repos and upgrade all packages
+  apt:
+    update_cache: yes
+    upgrade: no
+
+#- name: Install classic snaps
+#  snap:
+#    name: "{{ item }}"
+#    classic: yes
+#  loop:
+#      - shutter
+
+- name: Install non-classic snaps
+  snap:
+    name: "{{ item }}"
+    classic: yes
+  loop:
+      - ksnip
+      - standard-notes
+      - cherrytree
+
+- name: Give standard-notes permissions to use linux keyring
+  command: snap connect standard-notes:password-manager-service
+  register: connection
+  failed_when:
+    - connection.rc != 0
+  changed_when: connection.rc == 0
+
+- name: knsip app image
+  become: yes
+  copy:
+    src: files/ksnip.png
+    dest: /usr/local/share/icons/hicolor/512x512/apps/ksnip.png
+    

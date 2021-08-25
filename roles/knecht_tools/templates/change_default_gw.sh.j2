@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# remove default gw otto when in vpn
+# we want to bypass the standard traffic
+# set -e # commented out, just let it run
+set -x
+TUNGW=`netstat -rn | grep "^0.0.0.0" | grep "tun0$" | awk '{ print $2;}'`
+echo "TUNGW=$TUNGW"
+if [ "x$TUNGW" != "x" ]
+then
+    route delete default gw $TUNGW
+    route add -net 192.168.203.0 netmask 255.255.255.0 gw 192.168.2.2
+else
+    echo "no tungw found"
+fi
+echo "-----------------------"
+echo "ping fw auth"
+ping  -c 3 10.16.1.222
+echo "-----------------------"
+echo "netstat -rn"
+netstat -rn
+echo "-----------------------"
+#echo "traceroute pc"
+#traceroute s0105109.ocn.ottogroup.com
+echo "traceroute google dns"
+echo "netstat -rn"
+traceroute 8.8.8.8

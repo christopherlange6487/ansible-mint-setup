@@ -1,0 +1,7 @@
+---
+- name: Install flatpak packages
+  flatpak:
+    name: "{{ item }}"
+  loop:
+    - com.jgraph.drawio
+  become: no
