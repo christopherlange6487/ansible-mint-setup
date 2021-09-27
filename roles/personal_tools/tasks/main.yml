@@ -28,6 +28,8 @@
       - gdebi
       - sysstat
       - hardinfo
+      - mmv
+      - xsel
       
 - name: Set default editor to vim
   alternatives:
@@ -272,16 +274,16 @@
     owner: chrislan
     group: chrislan
 
-# broken
-#- name: Add Otto shares to fstab
-#  become: yes
-#  blockinfile:
-#    path: /etc/fstab
-#    marker: "# {mark} ANSIBLE MANAGED BLOCK fstab"
-#    block: |
-#      //ocnhhfs11.ocn.ottogroup.com/user$/chrislan /mnt/net/chrislan/ottouser cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
-#      //ocnhhfs21.ocn.ottogroup.com/abt$ /mnt/net/chrislan/ottoabt cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
-#      //ocnhhfs41.ocn.ottogroup.com/zdata$ /mnt/net/chrislan/m cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials 0 0
+- name: Add Otto shares to fstab
+  become: yes
+  blockinfile:
+    path: /etc/fstab
+    marker: "# {mark} ANSIBLE MANAGED BLOCK fstab"
+    block: |
+      # works only from campus
+      //ocnhhfs11.ocn.ottogroup.com/user$/chrislan /mnt/net/chrislan/ottouser cifs vers=3.0,uid=1000,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
+      //ocnhhfs21.ocn.ottogroup.com/abt$ /mnt/net/chrislan/ottoabt cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials
+      //ocnhhfs41.ocn.ottogroup.com/zdata$ /mnt/net/chrislan/m cifs vers=3.0,uid=1001,dir_mode=0770,file_mode=0660,gid=1000,credentials=/home/chrislan/.smbcredentials 0 0
 
 - name: nas3 net symlink (used for time reporint scripts)
   become: no
@@ -298,4 +300,13 @@
 - import_tasks: flatpak.yml
 
 - import_tasks: shutter.yml
+
+- name: copy .inputrc to ~ to prevent command not found errors when working with mac due to shift space
+  become: no
+  copy:
+    src: inputrc
+    dest: '${HOME}/.inputrc'
+    mode: 0755
+    
+
 
