@@ -30,6 +30,7 @@
       - hardinfo
       - mmv
       - xsel
+      - xterm
       
 - name: Set default editor to vim
   alternatives:
@@ -301,12 +302,20 @@
 
 - import_tasks: shutter.yml
 
-- name: copy .inputrc to ~ to prevent command not found errors when working with mac due to shift space
+- name: copy inputrc to ~/.inputrc to prevent command not found errors when working with mac due to shift space
   become: no
   copy:
     src: inputrc
     dest: '${HOME}/.inputrc'
     mode: 0755
-    
+
+- name: copy xosview.sh ~/bin for a customized start of xosview (isnt there a way using a rc file?)
+  become: no
+  copy:
+    src: xosview.sh
+    dest: '${HOME}/bin/xosview.sh'
+    mode: 0755
+
+
 
 
