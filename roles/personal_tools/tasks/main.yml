@@ -100,7 +100,14 @@
     path: '{{ turtle_git_dir }}'
     mode: u+rwx,og-w
 
-- name: turtle_forks_dir
+- name: mystuff_dir
+  become: no
+  file:
+    state: directory
+    path: '{{ mystuff_dir }}'
+    mode: u+rwx,og-w
+
+- name: mystuff_dir
   become: no
   file:
     state: directory
