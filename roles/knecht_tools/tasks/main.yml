@@ -28,6 +28,11 @@
       - gdebi
       - sysstat
       - hardinfo
+      - mmv
+      - xsel
+      - xterm
+      - digikam
+
       
 - name: Set default editor to vim
   alternatives:
@@ -260,4 +265,30 @@
 - import_tasks: flatpak.yml
 
 - import_tasks: shutter.yml
+
+- name: Ensure group win10disk exists
+  ansible.builtin.group:
+    name: win10disk
+    state: present
+
+- name: Ensure user chl is in this group
+  ansible.builtin.user:
+    name: chl
+    groups: adm,cdrom,sudo,dip,plugdev,lpadmin,sambashare,docker,vboxusers,win10disk
+
+# win10 is installed on a raw disk
+# see https://www.jamieweb.net/blog/booting-a-physical-windows-10-disk-using-virtualbox-on-linux/
+# how to use this inside virtual box
+# use lshw -short -class disk,volume and
+# add the right UUID in files/99-win10disk.rules
+- name: add special udev rule to set permissions on windows raw disk
+  become: yes
+  copy:
+    src: files/99-win10disk.rules
+    dest: /etc/udev/rules.d/99-win10disk.rules
+    owner: root
+    mode: 0644
+
+
+    
 
