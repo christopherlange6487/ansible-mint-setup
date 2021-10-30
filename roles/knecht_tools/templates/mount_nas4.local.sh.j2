@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# mount nas4 as chl
+mount -t cifs -o user=chl,vers=3.0,dir_mode=0770,file_mode=0660,uid=chl,gid=users,credentials=/home/chl/.smbcredentials_nas4 //nas4.local/homes /mnt/net/chl/nas4/homes

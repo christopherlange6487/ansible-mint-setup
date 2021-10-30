@@ -32,6 +32,7 @@
       - xsel
       - xterm
       - digikam
+      - ffmpeg
 
       
 - name: Set default editor to vim
@@ -198,6 +199,20 @@
     dest: '{{ bin_dir }}/umount_nas3.local.sh'
     mode: u+rwx,og-rwx
 
+- name: mount_nas4.local.sh
+  become: no
+  template:
+    src: mount_nas4.local.sh.j2
+    dest: '{{ bin_dir }}/mount_nas4.local.sh'
+    mode: u+rwx,og-rwx
+
+- name: umount_nas4.local.sh
+  become: no
+  template:
+    src: umount_nas4.local.sh.j2
+    dest: '{{ bin_dir }}/umount_nas4.local.sh'
+    mode: u+rwx,og-rwx
+
 - name: mnt_net-dir
   become: yes
   file:
@@ -241,6 +256,15 @@
     owner: chl
     group: chl
 
+- name: mnt_net_chl_nas3_NAS3_Volume1 dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas3/NAS3_Volume1'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
 - name: mnt_net_chl_nas3_pub dir
   become: yes
   file:
@@ -250,12 +274,49 @@
     owner: chl
     group: chl
 
-- name: nas3 net symlink (used for time reporint scripts)
+- name: mnt_net_chl_nas4 dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas4'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas4_homes dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas4/homes'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: mnt_net_chl_nas4_homes_chl dir
+  become: yes
+  file:
+    state: directory
+    path: '/mnt/net/chl/nas4/homes/chl'
+    mode: u+rwx,g+rwx,o-rwx
+    owner: chl
+    group: chl
+
+- name: nas3 net symlink
   become: no
   file:
     state: link
     src: '/mnt/net/chl/nas3'
-    dest: '${HOME}/net'
+    dest: '${HOME}/nas3'
+    mode: u+rwx,og-w
+    owner: chl
+    group: chl
+
+- name: nas4 net symlink
+  become: no
+  file:
+    state: link
+    src: '/mnt/net/chl/nas4'
+    dest: '${HOME}/nas4'
     mode: u+rwx,og-w
     owner: chl
     group: chl
