@@ -33,6 +33,9 @@
       - xterm
       - digikam
       - ffmpeg
+      - xvfb
+      - x11vnc
+      - tigervnc-viewer
 
       
 - name: Set default editor to vim
