@@ -36,6 +36,7 @@
       - xvfb
       - x11vnc
       - tigervnc-viewer
+      - vlc
 
       
 - name: Set default editor to vim
