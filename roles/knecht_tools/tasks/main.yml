@@ -34,10 +34,9 @@
       - digikam
       - ffmpeg
       - xvfb
-      - x11vnc
-      - tigervnc-viewer
       - vlc
-
+      - xrdp
+      - xorgxrdp
       
 - name: Set default editor to vim
   alternatives:
@@ -352,6 +351,16 @@
     src: files/99-win10disk.rules
     dest: /etc/udev/rules.d/99-win10disk.rules
     owner: root
+    mode: 0644
+
+# helper file (xsession) for xrdp to work
+# see https://www.rootisgod.com/2020/Using-RDP-With-Linux-Mint-20-Cinnamon/
+- name: create xsession for xrdp to work
+  become: no
+  copy:
+    src: files/xsession
+    dest: '${HOME}/.xsession'
+    owner: chl
     mode: 0644
 
 
