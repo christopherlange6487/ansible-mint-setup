@@ -31,6 +31,11 @@
       - mmv
       - xsel
       - xterm
+      - pwgen
+      - gimp
+      - indent
+      - scribus
+      - okular
       
 - name: Set default editor to vim
   alternatives:
