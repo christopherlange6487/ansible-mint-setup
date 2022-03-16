@@ -328,6 +328,13 @@
     dest: '${HOME}/bin/xosview.sh'
     mode: 0755
 
+- name: copy screenrc to ~/.screenrc to change the command key from a to 9
+  become: no
+  copy:
+    src: screenrc
+    dest: '${HOME}/.screenrc'
+    mode: 0755
+
 
 
 
