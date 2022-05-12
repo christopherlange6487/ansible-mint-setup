@@ -36,6 +36,8 @@
       - indent
       - scribus
       - okular
+      - diffpdf
+      - iostat
       
 - name: Set default editor to vim
   alternatives:
