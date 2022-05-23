@@ -37,7 +37,8 @@
       - scribus
       - okular
       - diffpdf
-      - iostat
+      - sysstat
+      - mc
       
 - name: Set default editor to vim
   alternatives:
