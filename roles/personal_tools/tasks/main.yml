@@ -39,6 +39,7 @@
       - diffpdf
       - sysstat
       - mc
+      - cpu-x
       
 - name: Set default editor to vim
   alternatives:
