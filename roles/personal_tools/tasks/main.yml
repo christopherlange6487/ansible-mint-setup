@@ -40,6 +40,7 @@
       - sysstat
       - mc
       - cpu-x
+      - graphviz
       
 - name: Set default editor to vim
   alternatives:
