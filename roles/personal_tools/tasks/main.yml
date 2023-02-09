@@ -41,6 +41,10 @@
       - mc
       - cpu-x
       - graphviz
+      - tio
+      - apt-file
+      - ntopng
+      - atop
       
 - name: Set default editor to vim
   alternatives:
