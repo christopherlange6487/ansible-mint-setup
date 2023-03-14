@@ -45,6 +45,10 @@
       - apt-file
       - ntopng
       - atop
+      - libxml2-utils
+      - iptraf-ng
+      
+      
       
 - name: Set default editor to vim
   alternatives:
