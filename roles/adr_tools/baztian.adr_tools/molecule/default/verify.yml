@@ -1,0 +1,11 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Register asdf help output
+    command: adr help
+    register: adr_help_cmd
+  - name: adr help should output something meaningful
+    assert:
+      that:
+        - "adr_help_cmd.stdout is search('usage: adr')"

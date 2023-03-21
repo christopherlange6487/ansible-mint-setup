@@ -1,0 +1,355 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+- name: Install unzip in order to be able to install some archives
+  apt:
+    pkg:
+      - unzip
+- name: Check if awscli {{ awscli_version }} already installed
+  stat:
+    path: /opt/awscli-{{ awscli_version }}/awscli
+  register: awscli_directory
+  tags: awscli
+- name: Download awscli {{ awscli_version }}
+  get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64-{{ awscli_version }}.zip
+    checksum: "sha256:{{ awscli_sha256 }}"
+    dest: /tmp/awscli-{{ awscli_version }}.zip
+    mode: 0644
+  when: not awscli_directory.stat.exists
+  tags: awscli
+- name: Create awscli {{ awscli_version }} directory
+  file:
+    path: /opt/awscli-{{ awscli_version }}
+    state: directory
+    mode: 0755
+  tags: awscli
+- name: Unarchive awscli {{ awscli_version }}
+  unarchive:
+    src: /tmp/awscli-{{ awscli_version }}.zip
+    dest: /opt/awscli-{{ awscli_version }}
+    remote_src: yes
+  when: not awscli_directory.stat.exists
+  tags: awscli
+- name: Symlink default awscli version to awscli {{ awscli_version }}
+  file:
+    src: awscli-{{ awscli_version }}
+    dest: /opt/awscli
+    state: link
+  tags: awscli
+- name: Symlink awscli binary
+  file:
+    src: /opt/awscli/aws/dist/aws
+    dest: /usr/local/bin/aws
+    state: link
+  tags: awscli
+- name: Setup awscli bash completion
+  lineinfile:
+    create: yes
+    path: /etc/bash_completion.d/aws_completer
+    regexp: '^complete -C "/opt/awscli/.*/aws_completer" aws$'
+    line: complete -C "/opt/awscli/aws/dist/aws_completer" aws
+    mode: 0644
+- name: Download session-manager-plugin {{ awscli_session_manager_plugin_version }}
+  get_url:
+    url: https://s3.amazonaws.com/session-manager-downloads/plugin/{{ awscli_session_manager_plugin_version }}/ubuntu_64bit/session-manager-plugin.deb
+    checksum: "sha256:{{ awscli_session_manager_plugin_sha256 }}"
+    dest: /tmp/session-manager-plugin.deb
+    mode: 0644
+- name: Install session-manager-plugin {{ awscli_session_manager_plugin_version }}
+  apt:
+    deb: /tmp/session-manager-plugin.deb
+    # allow for downgrade to avoid possible conflicts in GitHub Actions
+    force: yes
+- name: Add dockstats alias
+  lineinfile:
+    path: ~/.bashrc
+    regexp: '^alias whereami='
+    line: "{% raw %}alias whereami='echo \"$(aws iam list-account-aliases --query \"AccountAliases\" --output text) => $(aws sts get-caller-identity --query \"join('\"'\"' => '\"'\"', [Account,Arn])\" --output text)\"'{% endraw %}" # noqa 204
+  become: no
+- name: Check if aws-vault {{ aws_vault_version }} already installed
+  stat:
+    path: /opt/aws-vault-{{ aws_vault_version }}/aws-vault
+  register: aws_vault_directory
+  tags: aws_vault
+- name: Create aws-vault {{ aws_vault_version }} directory
+  file:
+    path: /opt/aws-vault-{{ aws_vault_version }}
+    state: directory
+    mode: 0755
+  tags: aws_vault
+- name: Download aws_vault {{ aws_vault_version }}
+  get_url:
+    url: https://github.com/99designs/aws-vault/releases/download/v{{ aws_vault_version }}/aws-vault-linux-amd64
+    checksum: sha256:{{ aws_vault_sha256 }}
+    dest: /opt/aws-vault-{{ aws_vault_version }}/aws-vault
+    mode: 0755
+  when: not aws_vault_directory.stat.exists
+  tags: aws_vault
+- name: Symlink default aws-vault version to aws-vault {{ aws_vault_version }}
+  file:
+    src: aws-vault-{{ aws_vault_version }}
+    dest: /opt/aws-vault
+    state: link
+  tags: aws_vault
+- name: Symlink aws-vault binary
+  file:
+    src: "/opt/aws-vault/aws-vault"
+    dest: "/usr/local/bin/aws-vault"
+    state: link
+  tags: aws_vault
+- name: Set assume role TTL for aws-vault to {{ aws_vault_assume_role_ttl }}
+  lineinfile:
+    path: ~/.bashrc
+    regexp: '^export AWS_ASSUME_ROLE_TTL='
+    line: export AWS_ASSUME_ROLE_TTL={{ aws_vault_assume_role_ttl }}
+  become: no
+  tags: aws_vault
+- name: Setup awscli bash completion for aws-vault
+  lineinfile:
+    path: /etc/bash_completion.d/aws_completer
+    regexp: '^complete -C "/opt/awscli/aws/dist/aws_completer" aws-vault$'
+    line: complete -C "/opt/awscli/aws/dist/aws_completer" aws-vault
+- name: Check if saml2aws {{ saml2aws_version }} already installed
+  stat:
+    path: /opt/saml2aws-{{ saml2aws_version }}/saml2aws
+  register: saml2aws_directory
+  tags: saml2aws
+- name: Create saml2aws {{ saml2aws_version }} directory
+  file:
+    path: /opt/saml2aws-{{ saml2aws_version }}
+    state: directory
+    mode: 0755
+  tags: saml2aws
+- name: Download saml2aws {{ saml2aws_version }}
+  get_url:
+    url: https://github.com/Versent/saml2aws/releases/download/v{{ saml2aws_version }}/saml2aws_{{ saml2aws_version }}_linux_amd64.tar.gz
+    checksum: sha256:{{ saml2aws_sha256 }}
+    dest: /tmp/saml2aws-{{ saml2aws_version }}.tar.gz
+    mode: 0755
+  when: not saml2aws_directory.stat.exists
+  tags: saml2aws
+- name: Unarchive saml2aws {{ saml2aws_version }}
+  unarchive:
+    src: /tmp/saml2aws-{{ saml2aws_version }}.tar.gz
+    dest: /opt/saml2aws-{{ saml2aws_version }}
+    remote_src: yes
+  when: not saml2aws_directory.stat.exists
+  tags: saml2aws
+- name: Symlink default saml2aws version to saml2aws {{ saml2aws_version }}
+  file:
+    src: saml2aws-{{ saml2aws_version }}
+    dest: /opt/saml2aws
+    state: link
+  tags: saml2aws
+- name: Symlink saml2aws binary
+  file:
+    src: "/opt/saml2aws/saml2aws"
+    dest: "/usr/local/bin/saml2aws"
+    state: link
+  tags: saml2aws
+- name: Set default aws profile for saml2aws
+  lineinfile:
+    path: ~/.profile
+    regexp: '^export {{ item }}='
+    line: export {{ item }}=saml
+  with_items:
+    - AWS_DEFAULT_PROFILE
+    - AWS_PROFILE
+  become: no
+  tags: saml2aws
+- name: Install assume-role.sh
+  get_url:
+    url: '{{ assume_role_url }}'
+    dest: /usr/local/bin/assume-role.sh
+    mode: 0755
+    force: yes
+- name: Install terraform via asdf
+  include_role:
+    name: baztian.asdf
+  vars:
+    asdf_plugins:
+      - name: terraform
+        versions: "{{ terraform_versions }}"
+        global: "{{ terraform_default_version }}"
+  tags: terraform
+- name: Create terraform12 runner
+  copy:
+     src: terraform12
+     dest: /usr/local/bin/terraform12
+     mode: 0755
+  tags: terraform
+- name: Create terraform13 runner
+  copy:
+     src: terraform13
+     dest: /usr/local/bin/terraform13
+     mode: 0755
+  tags: terraform
+- name: Create terraform Provider Plugin Cache directory
+  file:
+    path: ~/.terraform.d/plugin-cache
+    state: directory
+    mode: 0755
+  become: no
+- name: Configure Provider Plugin Cache directory
+  lineinfile:
+    path: ~/.terraformrc
+    create: yes
+    regexp: '^\s*plugin_cache_dir\s*='
+    line: 'plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"'
+    mode: 0644
+  become: no
+- name: Check if aws-nuke {{ aws_nuke_version }} already installed
+  stat:
+    path: /opt/aws-nuke-{{ aws_nuke_version }}/aws-nuke
+  register: aws_nuke_directory
+  tags: aws_nuke
+- name: Create aws-nuke {{ aws_nuke_version }} directory
+  file:
+    path: /opt/aws-nuke-{{ aws_nuke_version }}
+    state: directory
+    mode: 0755
+  tags: aws_nuke
+- name: Download aws-nuke {{ aws_nuke_version }}
+  get_url:
+    url: https://github.com/rebuy-de/aws-nuke/releases/download/v{{ aws_nuke_version }}/aws-nuke-v{{ aws_nuke_version }}-linux-amd64.tar.gz
+    checksum: sha256:{{ aws_nuke_sha256 }}
+    dest: /tmp/aws-nuke-{{ aws_nuke_version }}.tar.gz
+    mode: 0755
+  when: not aws_nuke_directory.stat.exists
+  tags: aws_nuke
+- name: Unarchive aws-nuke {{ aws_nuke_version }}
+  unarchive:
+    src: /tmp/aws-nuke-{{ aws_nuke_version }}.tar.gz
+    dest: /opt/aws-nuke-{{ aws_nuke_version }}
+    remote_src: yes
+  when: not aws_nuke_directory.stat.exists
+  tags: aws_nuke
+- name: Copy binary from aws-nuke-v{{ aws_nuke_version }}-linux-amd64 to aws-nuke
+  copy:
+    remote_src: True
+    src: /opt/aws-nuke-{{ aws_nuke_version }}/aws-nuke-v{{ aws_nuke_version }}-linux-amd64
+    dest: /opt/aws-nuke-{{ aws_nuke_version }}/aws-nuke
+    mode: 0755
+  when: not aws_nuke_directory.stat.exists
+  tags: aws_nuke
+- name: Delete binary aws-nuke-v{{ aws_nuke_version }}-linux-amd64
+  file:
+    path: /opt/aws-nuke-{{ aws_nuke_version }}/aws-nuke-v{{ aws_nuke_version }}-linux-amd64
+    state: absent
+  when: not aws_nuke_directory.stat.exists
+  tags: aws_nuke
+- name: Symlink default aws-nuke version to aws-nuke {{ aws_nuke_version }}
+  file:
+    src: aws-nuke-{{ aws_nuke_version }}
+    dest: /opt/aws-nuke
+    state: link
+  tags: aws_nuke
+- name: Symlink aws-nuke binary
+  file:
+    src: "/opt/aws-nuke/aws-nuke"
+    dest: "/usr/local/bin/aws-nuke"
+    state: link
+  tags: aws_nuke
+- name: Determine whether python 3.6 for aws-sam-cli required specifically
+  set_fact:
+    py_version: "{{ '3.6' if ( ansible_distribution == 'Debian' and ansible_distribution_release == 'stretch'
+     or ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'xenial'
+     or ansible_distribution == 'Linux Mint' and ansible_distribution_major_version == '18' ) else '3' }}"
+  tags: aws_sam_cli
+- name: Install aws-sam-cli
+  include_role:
+    name: baztian.pip_venv
+  vars:
+      pkg: aws-sam-cli
+      version: "{{ aws_sam_cli_version }}"
+      bin: sam
+  tags: aws_sam_cli
+- name: Install aws-encryption-sdk-cli
+  include_role:
+    name: baztian.pip_venv
+  vars:
+      pkg: aws-encryption-sdk-cli
+      version: "{{ aws_encryption_sdk_cli_version }}"
+      bin: aws-encryption-cli
+  tags: aws_encryption_sdk_cli
+- name: Install awslogs tool
+  include_role:
+    name: baztian.pip_venv
+  vars:
+      pkg: awslogs
+      version: "{{ awslogs_version }}"
+  tags: awslogs
+- name: Install sqs-send.sh
+  get_url:
+    url: "{{ sqs_send_url }}/raw/sqs-send.sh"
+    dest: /usr/local/bin/sqs-send.sh
+    mode: 0755
+    force: yes
+  tags: send_sqs
+- name: Make sure /etc/bash_completion.d exists
+  file:
+    path: /etc/bash_completion.d/
+    state: directory
+    mode: 0755
+  tags: send_sqs
+- name: Setup sqs-send bash completion
+  get_url:
+    url: "{{ sqs_send_url }}/raw/sqs-send-completion.bash"
+    dest: /etc/bash_completion.d/sqs-send
+    mode: 0644
+    force: yes
+  tags: send_sqs
+- name: Check if NoSQL Workbench {{ nosql_workbench_version }} already installed
+  stat:
+    path: /opt/NoSQL%20Workbench-{{ nosql_workbench_version }}.AppImage
+  register: nosql_workbench_directory
+  tags: nosql_workbench
+- name: Install fuse in order to be able to run NoSQL Workbench
+  apt:
+    pkg:
+      - fuse
+  tags: nosql_workbench
+- name: Download NoSQL Workbench {{ nosql_workbench_version }}
+  get_url:
+    url: https://s3.amazonaws.com/nosql-workbench/NoSQL%20Workbench-linux-x86_64-{{ nosql_workbench_version }}.AppImage
+    checksum: sha512:{{ nosql_workbench_sha512 }}
+    dest: /opt/NoSQL-Workbench-{{ nosql_workbench_version }}.AppImage
+    mode: 0755
+  when: not nosql_workbench_directory.stat.exists
+  tags: nosql_workbench
+- name: Symlink default NoSQL Workbench to version {{ nosql_workbench_version }}
+  file:
+    src: NoSQL-Workbench-{{ nosql_workbench_version }}.AppImage
+    dest: /opt/NoSQL-Workbench.AppImage
+    state: link
+  tags: nosql_workbench
+- name: Check if NoSQL Workbench icon already installed
+  stat:
+    path: /usr/local/share/icons/hicolor/512x512/apps/nosql-workbench.png
+  register: nosql_workbench_icon
+  tags: nosql_workbench
+- name: Create icon directory
+  file:
+    path: /usr/local/share/icons/hicolor/512x512/apps
+    state: directory
+    mode: 0755
+- name: Download NoSQL Workbench icon
+  get_url:
+    url: https://pbs.twimg.com/media/ESNEfDaWkAM9xPm?format=png
+    dest: /usr/local/share/icons/hicolor/512x512/apps/nosql-workbench.png
+    mode: 0644
+  when: not nosql_workbench_icon.stat.exists
+  tags: nosql_workbench
+- name: Create launcher directory
+  file:
+    path: /usr/local/share/applications
+    state: directory
+    mode: 0755
+  tags: nosql_workbench
+- name: Copy NoSQL Workbench desktop launcher
+  copy:
+    src: nosql-workbench.desktop
+    dest: /usr/local/share/applications/nosql-workbench.desktop
+    mode: 0644
+  tags: nosql_workbench

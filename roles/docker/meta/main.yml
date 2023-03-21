@@ -1,0 +1,14 @@
+galaxy_info:
+  author: baztian
+  role_name: docker
+  description: Role for installing docker and docker-compose
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+  - name: Ubuntu
+    versions:
+    - focal
+  galaxy_tags:
+    - docker
+    - compose
+dependencies: []

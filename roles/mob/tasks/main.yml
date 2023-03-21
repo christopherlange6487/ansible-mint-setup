@@ -1,0 +1,32 @@
+---
+- name: Check if mob already installed
+  stat:
+    path: /opt/mob-{{ mob_version }}/mob
+  register: mob_bin
+- name: Download mob
+  get_url:
+    url: "https://github.com/remotemobprogramming/mob/releases/download/v{{ mob_version }}/mob_v{{ mob_version }}_linux_amd64.tar.gz"
+    checksum: "md5:{{ mob_md5 }}"
+    dest: /tmp/
+  when: not mob_bin.stat.exists
+- name: Create mob directory
+  file:
+    path: /opt/mob-{{ mob_version }}
+    state: directory
+    mode: 0755
+- name: Unarchive mob
+  unarchive:
+    src: /tmp/mob_v{{ mob_version }}_linux_amd64.tar.gz
+    dest: /opt/mob-{{ mob_version }}
+    remote_src: yes
+  when: not mob_bin.stat.exists
+- name: Symlink default mob
+  file:
+    src: "mob-{{ mob_version }}"
+    dest: "/opt/mob"
+    state: link
+- name: Symlink mob bin
+  file:
+    src: "/opt/mob/mob"
+    dest: "/usr/local/bin/mob"
+    state: link

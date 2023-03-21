@@ -1,0 +1,64 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+- name: Add contrib so that ttf-mscorefonts-installer is available
+  apt_repository:
+    repo: deb http://deb.debian.org/debian {{ ansible_distribution_release }} contrib non-free
+  when: ansible_distribution == "Debian"
+- name: Install various packages
+  apt:
+    pkg: "{{ various_apt_packages }}"
+- name: Install remmina
+  apt:
+    pkg:
+      - remmina
+      - remmina-plugin-rdp
+      - remmina-plugin-vnc
+  tags: remmina
+- name: Install xz-utils as a prerequisit to install zoom
+  apt:
+    pkg: xz-utils
+  tags: zoom_us
+- name: Install zoom.us
+  # https://support.zoom.us/hc/en-us/articles/205759689-New-Updates-for-Linux
+  apt:
+    deb: "{{ zoom_deb_url }}"
+  tags: zoom_us
+- name: Install dirmngr in order to be able to install the apt signing key
+  apt:
+    pkg:
+      - dirmngr
+      - apt-transport-https
+- name: Add Microsoft apt signing key on remote server to keyring
+  apt_key:
+    id: BC528686B50D79E339D3721CEB3E94ADBE1229CF
+    keyserver: keyserver.ubuntu.com
+  tags: ms_teams
+- name: Add apt repo for ms teams
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main
+    # setting filename required to not collide with the one provided by the deb similar to
+    # https://github.com/microsoft/vscode/blob/master/resources/linux/debian/postinst.template
+    filename: teams
+    state: present
+  tags: ms_teams
+#- name: Install Microsoft Teams client
+#  apt:
+#    pkg: teams
+#  tags: ms_teams
+#- name: Gather installed packages
+#  package_facts:
+#  tags: teams_for_linux
+- name: Download unofficial Microsoft Teams for Linux client
+  get_url:
+    url: "https://github.com/IsmaelMartinez/teams-for-linux/releases/download/v{{
+       teams_for_linux_version }}/teams-for-linux_{{ teams_for_linux_version }}_amd64.deb"
+    checksum: "sha1:{{ teams_for_linux_sha1 }}"
+    dest: "/tmp/teams-for-linux_{{ teams_for_linux_version }}_amd64.deb"
+  when: ansible_facts.packages['teams-for-linux']|default('undefined') != teams_for_linux_version
+  tags: teams_for_linux
+- name: Install unofficial Microsoft Teams for Linux client
+  apt:
+    deb: "/tmp/teams-for-linux_{{ teams_for_linux_version }}_amd64.deb"
+  tags: teams_for_linux
+  when: ansible_facts.packages['teams-for-linux']|default('undefined') != teams_for_linux_version

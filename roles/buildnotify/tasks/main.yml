@@ -1,0 +1,27 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+- name: Install some dependent packages
+  apt:
+    pkg:
+      - python3-dateutil
+      - python3-tz
+      - python3-requests
+      - python3-pyqt5
+- name: Install buildnotify
+  include_role:
+    name: baztian.pip_venv
+  vars:
+      pkg: buildnotify
+      version: "{{ buildnotify_version }}"
+      bin: buildnotifyapplet.py
+- name: Create launcher directory
+  file:
+    path: /usr/local/share/applications
+    state: directory
+    mode: 0755
+- name: Copy buildnotify desktop launcher
+  copy:
+    src: buildnotify.desktop
+    dest: /usr/local/share/applications/buildnotify.desktop
+    mode: 0644

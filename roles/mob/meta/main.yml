@@ -1,0 +1,19 @@
+galaxy_info:
+  author: baztian
+  role_name: mob
+  description: Role for installing mob
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+    - bionic
+    - focal
+  - name: Debian
+    versions:
+    - stretch
+    - buster
+  galaxy_tags:
+    - mob
+dependencies: []

@@ -1,0 +1,34 @@
+From 4e210a67b4c8f3b8bd3aefdeb3cb99dbd4a970ce Mon Sep 17 00:00:00 2001
+From: baztian <bastian.dev@gmail.com>
+Date: Mon, 9 Jan 2023 16:08:37 +0100
+Subject: [PATCH] Fix ansible-lint action
+
+---
+ .ansible-lint                 | 2 ++
+ .github/workflows/publish.yml | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+ create mode 100644 .ansible-lint
+
+diff --git a/.ansible-lint b/.ansible-lint
+new file mode 100644
+index 0000000..5876e9e
+--- /dev/null
++++ b/.ansible-lint
+@@ -0,0 +1,2 @@
++skip_list:
++  - 'fqcn-builtins'
+diff --git a/.github/workflows/publish.yml b/.github/workflows/publish.yml
+index da339a6..64c30b8 100644
+--- a/.github/workflows/publish.yml
++++ b/.github/workflows/publish.yml
+@@ -10,6 +10,6 @@ jobs:
+     runs-on: ubuntu-latest
+     steps:
+       - name: galaxy
+-        uses: robertdebock/galaxy-action@1.1.0
++        uses: robertdebock/galaxy-action@1.2.1
+         with:
+           galaxy_api_key: ${{ secrets.galaxy_api_key }}
+-- 
+2.25.1
+

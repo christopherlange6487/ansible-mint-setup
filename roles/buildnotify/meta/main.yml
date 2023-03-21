@@ -1,0 +1,14 @@
+galaxy_info:
+  author: baztian
+  role_name: buildnotify
+  description: Role for installing the buildnotify build status system tray tool
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+  - name: Ubuntu
+    versions:
+    - focal
+  galaxy_tags:
+    - build
+    - cctray
+dependencies: []
