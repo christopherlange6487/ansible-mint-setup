@@ -9,7 +9,7 @@ Role to download, install [ADR Tools](https://github.com/npryce/adr-tools) for w
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.adr_tools
+         - role: adr_tools
 
 # License
 

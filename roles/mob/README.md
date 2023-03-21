@@ -9,7 +9,7 @@ Role to download, install and setup [mob](https://mob.sh/).
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.mob
+         - role: mob
 
 ## License
 

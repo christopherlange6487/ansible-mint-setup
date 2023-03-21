@@ -54,6 +54,6 @@
 #    - block:
 #      - include_role: name=joplin
 #      tags: joplin
-#    - block:
-#      - include_role: name=personal_tools
-#      tags: personal_tools
+    - block:
+      - include_role: name=personal_tools
+      tags: personal_tools

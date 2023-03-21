@@ -5,7 +5,7 @@ Aws ansible role
 
 Role to download, install and setup various tools for AWS (Amazon Web
 Services). Requires `asdf` being install. Consider using
-[baztian.asdf](https://github.com/baztian/ansible-asdf) to install
+[asdf](https://github.com/baztian/ansible-asdf) to install
 `asdf`.
 
 Example Playbook
@@ -14,8 +14,8 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.asdf
-         - role: baztian.aws
+         - role: asdf
+         - role: aws
 
 License
 -------

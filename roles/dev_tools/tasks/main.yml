@@ -98,7 +98,7 @@
       pkg: python3-cryptography
   - name: Install ansible-lint without package manager
     include_role:
-      name: baztian.pip_venv
+      name: pip_venv
       apply:
         tags:
           - ansible_lint
@@ -118,7 +118,7 @@
   tags: molecule
 - name: Install molecule
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
     apply:
       tags:
         - molecule
@@ -131,7 +131,7 @@
   tags: molecule
 - name: Install yq
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
     apply:
       tags:
         - yq
@@ -141,7 +141,7 @@
   tags: yq
 # - name: Install jpterm
 #   include_role:
-#     name: baztian.pip_venv
+#     name: pip_venv
 #     apply:
 #       tags:
 #         - jpterm
@@ -206,7 +206,7 @@
     tags: ripgrep
 - name: Install bump2version aka bumpversion
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
     apply:
       tags:
         - bump2version
@@ -217,4 +217,4 @@
   tags: bump2version
 - name: Install adr-tools
   include_role:
-    name: baztian.adr_tools
+    name: adr_tools

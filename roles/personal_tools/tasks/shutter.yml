@@ -1,4 +1,12 @@
 ---
+##
+##
+##
+## install shutter via anwendungsverwaltung, worked fine !!!!!
+##
+##
+##
+##
 - name: Add key for shutter ppa
   become: yes
   apt_key:
@@ -10,12 +18,12 @@
   register: distro
   changed_when: False
 
-- name: Add Shutter PPA (deb)
-  apt_repository:
-    repo: deb http://ppa.launchpad.net/shutter/ppa/ubuntu {{ distro.stdout }} main
-
-- name: Update apt cache.
-  apt: update_cache=yes cache_valid_time=3600
+#- name: Add Shutter PPA (deb)
+#  apt_repository:
+#    repo: deb http://ppa.launchpad.net/shutter/ppa/ubuntu {{ distro.stdout }} main
+#
+#- name: Update apt cache.
+#  apt: update_cache=yes cache_valid_time=3600
 
 - name: Install shutter and related tools
   become: yes

@@ -10,7 +10,7 @@ is a "system tray based build status notification app for `cctray.xml` feeds".
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.buildnotify
+         - role: buildnotify
 
 ## License
 

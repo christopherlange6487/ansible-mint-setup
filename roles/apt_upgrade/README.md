@@ -17,7 +17,7 @@ Example Playbook
         - regexp: http://archive.ubuntu.com/ubuntu
           replace: http://ftp.fau.de/ubuntu
       roles:
-         - role: baztian.apt_upgrade
+         - role: apt_upgrade
 
 License
 -------

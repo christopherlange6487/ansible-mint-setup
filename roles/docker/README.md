@@ -9,7 +9,7 @@ Ansible role to install docker and docker-compose.
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.docker
+         - role: docker
 
 ## License
 

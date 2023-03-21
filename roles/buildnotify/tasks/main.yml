@@ -10,7 +10,7 @@
       - python3-pyqt5
 - name: Install buildnotify
   include_role:
-    name: baztian.pip_venv
+    name: pip_venv
   vars:
       pkg: buildnotify
       version: "{{ buildnotify_version }}"

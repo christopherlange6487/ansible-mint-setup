@@ -4,7 +4,6 @@
   apt:
     pkg:
       - emacs
-      - ssh
       - xosview
       - pinentry-curses
       - pinentry-gnome3
@@ -16,14 +15,11 @@
       - remmina
       - cifs-utils
       - keyutils
-      - python
       - dos2unix
-      - keepassxc
       - httpie
       - terminator
       - chromium-browser
       - fzf
-      - vim
       - ubuntu-restricted-extras
       - gdebi
       - sysstat
@@ -43,17 +39,16 @@
       - graphviz
       - tio
       - apt-file
-      - ntopng
       - atop
       - libxml2-utils
-      - iptraf-ng
+
       
       
       
-- name: Set default editor to vim
-  alternatives:
-    name: editor
-    path: /usr/bin/vim.basic
+#- name: Set default editor to vim
+#  alternatives:
+#    name: editor
+#    path: /usr/bin/vim.basic
     
 - name: .emacs
   become: no
@@ -325,7 +320,8 @@
 
 - import_tasks: flatpak.yml
 
-- import_tasks: shutter.yml
+# install it via anwendungsbetreuung
+#- import_tasks: shutter.yml
 
 - name: copy inputrc to ~/.inputrc to prevent command not found errors when working with mac due to shift space
   become: no

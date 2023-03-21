@@ -12,7 +12,7 @@ Example Playbook
     - hosts: servers
       become: yes
       roles:
-         - role: baztian.other_installs
+         - role: other_installs
 
 License
 -------
