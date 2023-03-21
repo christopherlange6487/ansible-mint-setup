@@ -9,22 +9,32 @@
       - include_role: name=git
       tags: git
     - block:
-      - include_role: name=python
-      tags: python
-# hier muss ein interpreter gesetzt werden und python3-apt installiert werden
-# sonst bricht ab wg fehlende abhaengigkeit
-    - block:
       - include_role: name=asdf
       tags: asdf
     - block:
       - include_role: name=docker
       tags: docker
     - block:
+      - include_role: name=vscode
+      tags: vscode
+    - block:
+      - include_role: name=python
+      tags: python
+    - block:
+      - include_role: name=adr_tools
+      tags: adr_tools
+    - block:
+      - include_role: name=dev_tools
+      tags: dev_tools
+    - block:
       - include_role: name=java
       tags: java
     - block:
-      - include_role: name=vscode
-      tags: vscode
+      - include_role: name=aws
+      tags: aws
+    - block:
+      - include_role: name=keepass
+      tags: keepass
     - block:
       - include_role: name=jetbrains_toolbox
       tags: jetbrains_toolbox
@@ -32,20 +42,18 @@
       - include_role: name=js
       tags: js
     - block:
-      - include_role: name=dev_tools
-      tags: dev_tools
-    - block:
-      - include_role: name=aws
-      tags: aws
-    - block:
       - include_role: name=other_installs
       tags: other_installs
     - block:
-      - include_role: name=vagrant
-      tags: vagrant
-    - block:
-      - include_role: name=joplin
-      tags: joplin
-    - block:
-      - include_role: name=personal_tools
-      tags: personal_tools
+      - include_role: name=mob
+      tags: mob
+
+#    - block:
+#      - include_role: name=vagrant
+#      tags: vagrant
+#    - block:
+#      - include_role: name=joplin
+#      tags: joplin
+#    - block:
+#      - include_role: name=personal_tools
+#      tags: personal_tools
