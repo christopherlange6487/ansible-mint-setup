@@ -51,6 +51,9 @@
 #    - block:
 #      - include_role: name=vagrant
 #      tags: vagrant
+# joplin : md5 summe angepasst aber Icon kaputt, daher anschliessend
+#          manuell installiert und die daten aus dem Backup wiederherstellt
+#          21.03.2022
 #    - block:
 #      - include_role: name=joplin
 #      tags: joplin
